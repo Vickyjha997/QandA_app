@@ -8,8 +8,7 @@ const protect = require('../middleware/protect');
 const { OAuth2Client } = require('google-auth-library');
 const { sendEmail } = require('../utils/mailer'); // ✅ ADD THIS
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-const { sendWatiText, sendWatiTemplate, buildNamedParams } = require('../utils/wati');
-
+const {sendWatiTemplateMessage,sendWhatsAppMessage} = require("../utils/whatappWati")
 
 
 const {
@@ -142,8 +141,11 @@ router.post('/student/register', validate(studentRegisterSchema), async (req, re
             buildNamedParams({ name })
         );
 
-        // 📌 Optional: send welcome email (kept same)
-        sendWelcomeEmail(email, name, 'student');
+        // // 📌 Send WhatsApp welcome template
+        // sendWhatsAppMessage(phoneNumber);
+        // sendWatiTemplateMessage(phoneNumber,name);
+        // // 📌 Optional email
+        // sendWelcomeEmail(email, name, 'student');
 
         // Generate Token
         const payload = { 
@@ -279,15 +281,11 @@ router.post('/tutor/register', validate(tutorRegisterSchema), async (req, res) =
 
         await newTutor.save();
 
-        // 📌 Send WhatsApp welcome template
-        sendWatiTemplate(
-            phoneNumber,
-            "welcome_wati_v1",
-            buildNamedParams({ name })
-        );
-
-        // 📌 Optional email
-        sendWelcomeEmail(email, name, 'tutor');
+        // // 📌 Send WhatsApp welcome template
+        // sendWhatsAppMessage(phoneNumber);
+        // sendWatiTemplateMessage(phoneNumber,name);
+        // // 📌 Optional email
+        // sendWelcomeEmail(email, name, 'tutor');
 
         // JWT
         const payload = { 
